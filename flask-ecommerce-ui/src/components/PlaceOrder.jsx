@@ -10,6 +10,7 @@ import {
   FormGroup,
   FormLabel,
   FormControl,
+  Row,
 } from "react-bootstrap";
 import axios from "axios";
 
@@ -79,8 +80,48 @@ const OrderForm = () => {
     navigate("/orders");
   };
 
+  const handleOrderIncrement = (product) => {
+    setOrderProducts((prev) => {
+      const existingProduct = prev.find((p) => p.id === product.id);
+      if (existingProduct) {
+        return prev.map((p) =>
+          p.id === product.id ? { ...p, quantity: p.quantity + 1 } : p
+        );
+      }
+      return [...prev, { ...product, quantity: 1 }];
+    });
+  };
+
+  const handleOrderDecrement = (productId) => {
+    setOrderProducts((prev) =>
+      prev
+        .map((p) =>
+          p.id === productId ? { ...p, quantity: p.quantity - 1 } : p
+        )
+        .filter((p) => p.quantity > 0)
+    );
+  };
+
   return (
     <>
+      <Container>
+        <Row>
+          <h4>Menu</h4>
+          <ListGroup>
+            {products.map((product) => (
+              <ListGroupItem key={product.id} className="d-flex justify-content-between align-items-center">
+                <div>
+                  {product.name} - {product.price}
+                </div>
+                <div>
+                  <Button variant="primary" onClick={() => handleOrderIncrement(product)}>+</Button>
+                </div>
+              </ListGroupItem>
+            ))}
+          </ListGroup>
+        </Row>
+      </Container>
+
       <Container>
         <Form onSubmit={handleSubmit}>
           <FormGroup>
@@ -103,11 +144,14 @@ const OrderForm = () => {
         <h4>Selected Products</h4>
         <ListGroup>
           {orderProducts.map((product) => (
-            <ListGroupItem key={product.id}>
-              {product.name} - {product.price} x {product.quantity}
-              <Button variant="danger" onClick={() => removeProduct(product.id)}>
-                Remove
-              </Button>
+            <ListGroupItem key={product.id} className="d-flex justify-content-between align-items-center">
+              <div>
+                {product.name} - {product.price} x {product.quantity}
+              </div>
+              <div>
+                <Button variant="primary" onClick={() => handleOrderDecrement(product.id)}>-</Button>
+                <Button variant="primary" onClick={() => handleOrderIncrement(product)}>+</Button>
+              </div>
             </ListGroupItem>
           ))}
         </ListGroup>
@@ -117,7 +161,7 @@ const OrderForm = () => {
         <Modal.Header closeButton>
           <Modal.Title>Order Submitted</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Your order has been placed successfully.</Modal.Body>
+        <Modal.Body>Your order has been placed.</Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Close

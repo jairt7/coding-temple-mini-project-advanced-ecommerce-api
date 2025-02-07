@@ -28,7 +28,7 @@ const App = () => {
         <Route path="/products/:id" element={<ProductForm />} />
         <Route path="/product-detail/:id" element={<ProductDetail />} />
         <Route path="/customers/:id" element={<CustomerFormWrapper2 />} />
-        <Route path="/place-order" element={<OrderForm />} />
+        <Route path="/orders" element={<OrderForm />} />
       </Routes>
     </div>
   );
