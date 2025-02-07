@@ -26,9 +26,6 @@ const ProductForm = () => {
     const validateForm = () => {
         let  errors = {};
         if (!product.name) errors.name = "Product name is required";
-        if (!product.price || isNaN(product.price) || parseFloat(product.price) <= 0) {
-            errors.price = "Price must be a positive number";
-        }
         if (!product.stock || product.stock < 0) errors.stock = "Stock can't be negative";
         setErrors(errors);
         return Object.keys(errors).length === 0;
@@ -38,7 +35,6 @@ const ProductForm = () => {
         event.preventDefault();
         if (!validateForm()) return;
         setSubmitting(true);
-        product.price = `$${product.price}`
         product.stock = Number(product.stock)
         try {
             if (id) {
@@ -91,7 +87,7 @@ const ProductForm = () => {
             <Form.Group controlId="productPrice">
                 <Form.Label>Price:</Form.Label>
                 <Form.Control
-                type="number"
+                type="text"
                 name="price"
                 value={product.price}
                 onChange={handleChange}

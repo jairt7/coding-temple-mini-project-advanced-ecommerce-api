@@ -10,8 +10,6 @@ class CustomerForm extends Component {
             name: "",
             email: "",
             phone: "",
-            username: "",
-            password: "",
             errors: {},
             isLoading: false,
             error: null,
@@ -27,6 +25,23 @@ class CustomerForm extends Component {
         }
     }
 
+    fetchCustomerData = (id) => {
+        axios
+            .get(`http://127.0.0.1:5000/customers/${id}`)
+            .then((response) => {
+                const customerData = response.data;
+                this.setState({
+                    name: customerData.name,
+                    email: customerData.email,
+                    phone: customerData.phone,
+                    selectedCustomerId: id,
+                });
+            })
+            .catch((error) => {
+                console.error("Error fetching customer data:", error);
+            });
+    };
+
     handleChange = (event) => {
         const { name, value } = event.target;
         this.setState({ [name]: value });
@@ -34,13 +49,11 @@ class CustomerForm extends Component {
 
     validateForm = () => {
         const errors = {};
-        const { name, email, phone, username, password } = this.state;
+        const { name, email, phone } = this.state;
 
         if (!name.trim()) errors.name = "Name is required";
         if (!email.trim()) errors.email = "Email is required";
         if (!phone.trim()) errors.phone = "Phone is required";
-        if (!username.trim()) errors.username = "Username is required";
-        if (!password.trim()) errors.password = "Password is required";
 
         return errors;
     };
@@ -57,12 +70,10 @@ class CustomerForm extends Component {
                 name: this.state.name.trim(),
                 email: this.state.email.trim(),
                 phone: this.state.phone.trim(),
-                username: this.state.username.trim(),
-                password: this.state.password.trim(),
             };
-            const apiUrl = "http://127.0.0.1:5000/customers";
+            const apiUrl = `http://127.0.0.1:5000/customers/${this.state.selectedCustomerId}`
 
-            const httpMethod = axios.post;
+            const httpMethod = axios.put;
 
             httpMethod(apiUrl, customerData)
                 .then(() => {
@@ -70,8 +81,6 @@ class CustomerForm extends Component {
                         name: "",
                         email: "",
                         phone: "",
-                        username: "",
-                        password: "",
                         errors: {},
                         selectedCustomerId: null,
                         isLoading: false,
@@ -93,8 +102,6 @@ class CustomerForm extends Component {
             name: "",
             email: "",
             phone: "",
-            username: "",
-            password: "",
             errors: "",
             selectedCustomerId: null
         });
@@ -102,7 +109,7 @@ class CustomerForm extends Component {
     }
 
     render() {
-        const { name, email, phone, username, password, errors, error, isLoading, showSuccessModal } = this.state;
+        const { name, email, phone, errors, error, isLoading, showSuccessModal } = this.state;
 
         return (
             <Container>
@@ -145,32 +152,8 @@ class CustomerForm extends Component {
                         {errors.phone && <div style={{color: 'danger'}}>{errors.phone}</div>}
                     </Form.Group>
 
-                    <Form.Group controlId="formGroupUsername">
-                        <Form.Label>Username</Form.Label>
-                        <Form.Control
-                        type="text"
-                        name="username"
-                        value={username}
-                        onChange={this.handleChange}
-                        isInvalid={!!errors.username}
-                    />
-                    {errors.username && <div style={{color: 'danger'}}>{errors.username}</div>}
-                    </Form.Group>
-
-                    <Form.Group controlId="formGroupPassword">
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control
-                        type="password"
-                        name="password"
-                        value={password}
-                        onChange={this.handleChange}
-                        isInvalid={!!errors.password}
-                    />
-                    {errors.password && <div style={{color: 'danger'}}>{errors.password}</div>}
-                    </Form.Group>
-
                     <Button variant="primary" type="submit" disabled={isLoading}>
-                        Add Customer
+                        Update Customer
                     </Button>
                 </Form>
 
@@ -179,7 +162,7 @@ class CustomerForm extends Component {
                         <Modal.Title>Success!</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        The customer has been successfully added.
+                        The customer has been successfully updated.
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={this.closeModal}>Close</Button>

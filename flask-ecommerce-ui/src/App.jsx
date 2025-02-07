@@ -1,47 +1,37 @@
-import { Component } from "react";
+import { useState } from "react";
+import { Route, Routes } from "react-router-dom";
 import CustomerList from "./components/CustomerList";
-import OrderList from "./components/OrderList";
+import OrderForm from "./components/PlaceOrder";
 import ProductList from "./components/ProductList";
+import ProductDetail from "./components/ProductDetail";
 import CustomerFormWrapper from "./components/CustomerFormWrapper";
+import CustomerFormWrapper2 from "./components/CustomerFormWrapper2";
 import ProductForm from "./components/ProductForm";
 import NavigationBar from "./components/NavBar";
 import Home from "./components/Home";
-import { Route, Routes } from "react-router-dom";
-import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './style.css';
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      selectedCustomerId: null,
-      selectedOrderId: null
-    };
-  }
+const App = () => {
+  const [selectedCustomerId, setSelectedCustomerId] = useState(null);
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
 
-  handleCustomerSelect = (customerId) => {
-    this.setState({ selectedCustomerId: customerId })
-  }
-
-  handleOrderSelect = (orderId) => {
-    this.setState({ selectedOrderId: orderId })
-  }
-
-  render() {
-    const { selectedCustomerId, selectedOrderId } = this.state
-
-    return ( 
-      <div className="appContainer">
-        <NavigationBar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/add-customer" element={<CustomerFormWrapper />} />
-          <Route path="/customers" element={<CustomerList />} />
-          <Route path="/add-product" element={<ProductForm />} />
-          <Route path="/products" element={<ProductList />} />
-        </Routes>
-      </div>
-    );
-  }
-}
+  return (
+    <div className="appContainer">
+      <NavigationBar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/add-customer" element={<CustomerFormWrapper />} />
+        <Route path="/customers" element={<CustomerList />} />
+        <Route path="/add-product" element={<ProductForm />} />
+        <Route path="/products" element={<ProductList />} />
+        <Route path="/products/:id" element={<ProductForm />} />
+        <Route path="/product-detail/:id" element={<ProductDetail />} />
+        <Route path="/customers/:id" element={<CustomerFormWrapper2 />} />
+        <Route path="/place-order" element={<OrderForm />} />
+      </Routes>
+    </div>
+  );
+};
 
 export default App;

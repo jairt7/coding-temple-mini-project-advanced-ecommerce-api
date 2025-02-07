@@ -360,12 +360,12 @@ def place_order():
         db.session.add(new_order)
         db.session.commit()
         for item in order_data["items"]:
-            current_product = Product.query.get_or_404(item["product_id"])
+            current_product = Product.query.get_or_404(item["id"])
             if item["quantity"] > current_product.stock:
                 return jsonify({"message": "Not enough stock for that item."})
             db.session.execute(order_product.insert().values(
                 order_id = new_order.id,
-                product_id = item["product_id"],
+                product_id = item["id"],
                 quantity = item["quantity"]
                 ))
             current_product.stock -= item["quantity"]

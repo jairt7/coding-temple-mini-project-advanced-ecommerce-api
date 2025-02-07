@@ -1,38 +1,52 @@
 import { func, number } from 'prop-types';
 import { useState, useEffect } from 'react';
-import OrderDetails from './OrderDetails';
 import axios from 'axios';
 
 const OrderList = ({ customerId, onOrderSelect }) => {
     const [orders, setOrders] = useState([]);
-    const [orderId, setOrderId] = useState();
+    const [orderId, setOrderId] = useState(null);
 
     useEffect(() => {
         const fetchOrders = async () => {
             try {
                 const response = await axios.get(`http://127.0.0.1:5000/orders?customer_id=${customerId}`);
                 setOrders(response.data);
-                console.log(response.data)
             } catch (error) {
-                console.error('Error fetching orders:', error)
+                console.error('Error fetching orders:', error);
             }
-        }
+        };
+        
         if (customerId) {
-            fetchOrders()
+            fetchOrders();
         }
     }, [customerId]);
 
     return (
         <div className='order-list'>
-            <h3>Orders</h3>
-            <ul>
-                {orders.map(order => (
-                    <li key={order.id} onClick={() => setOrderId(order)}>
-                        Order ID: {order.id}, Customer ID: {order.customer_id}
-                        {orderId && order.id == orderId.id && <OrderDetails order = {order}/>}
-                    </li>
-                ))}
-            </ul>
+            <h4>Orders</h4>
+            {orders.length === 0 ? (
+                <p>No orders found for this customer.</p>
+            ) : (
+                <ul className="list-group">
+                    {orders.map(order => (
+                        <li 
+                            key={order.id} 
+                            className="list-group-item"
+                            onClick={() => {
+                                setOrderId(order.id);
+                                if (onOrderSelect) onOrderSelect(order.id);
+                            }}
+                        >
+                            <h5>Order details</h5>
+                            <p>Order ID: {order.id}</p>
+                            <p>Customer ID: {order.customer_id}</p>
+                            <p>Shipping date: {order.shipping_date}</p>
+                            <p>Arrival date: {order.arrival_date}</p>
+                            <p>Order status: {order.order_status}</p>
+                        </li>
+                    ))}
+                </ul>
+            )}
         </div>
     );
 };
@@ -40,6 +54,6 @@ const OrderList = ({ customerId, onOrderSelect }) => {
 OrderList.propTypes = {
     customerId: number,
     onOrderSelect: func
-}
+};
 
 export default OrderList;
