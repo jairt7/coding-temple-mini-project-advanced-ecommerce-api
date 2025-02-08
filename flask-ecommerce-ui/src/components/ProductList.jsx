@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { NavLink } from "react-router-dom";
-import { Container, ListGroup, Row, Col, ListGroupItem } from "react-bootstrap";
+import { NavLink, useNavigate } from "react-router-dom";
+import { Container, ListGroup, Row, Col, ListGroupItem, Button } from "react-bootstrap";
 
 const ProductList = () => {
     const [products, setProducts] = useState([]);
     const [errorMessage, setErrorMessage] = useState("");
+    const navigate = useNavigate();
+
 
     useEffect(() => {
         fetchProducts();
@@ -49,9 +51,10 @@ const ProductList = () => {
                                     <NavLink to={`/product-detail/${product.id}`} className="text-decoration-none">
                                         {product.name}
                                     </NavLink>
-                                    <button className="btn btn-danger btn-sm" onClick={() => deleteProduct(product.id)}>
-                                        Delete
-                                    </button>
+                                    <div>
+                                        <Button variant="primary" onClick={() => navigate(`/products/${product.id}`)}>Edit</Button>
+                                        <Button variant="danger" onClick={() => deleteProduct(product.id)}>Delete</Button>
+                                    </div>
                                 </ListGroupItem>
                             ))}
                         </ListGroup>

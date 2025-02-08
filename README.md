@@ -12,9 +12,11 @@
 
 5. cd flask-ecommerce-ui
 
-6. npm run dev
+6. npm install
 
-7. Click the link in the terminal to be taken to the page in your browser
+7. npm run dev
+
+8. Click the link in the terminal to be taken to the page in your browser
 
 ## Built With
 
@@ -29,7 +31,7 @@
 
 Jared Wilson - main author
 
-Daniel Erazo, Yessica Soza, Katelyn Mehner, Dylan Katina - help along the way
+Daniel Erazo, Yessica Soza, Katelyn Mehner, Dylan Katina - much help along the way
 
 Coding Temple - videos with initial instructions
 
